@@ -1,0 +1,10 @@
+{application, gcyclic,
+ [{description, "Generate Cyclic Message Passing Server"},
+  {vsn, git},
+  {registered, []},
+  {applications, [kernel, stdlib]},
+  {env,[]},
+  {maintainers, ["Hinagiku Soranoba"]},
+  {licenses, ["MIT"]},
+  {links, [{"GitHub", "https://github.com/soranoba/gcyclic"}]}
+ ]}.

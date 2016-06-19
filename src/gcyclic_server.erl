@@ -29,8 +29,56 @@
 %% Callback Functions
 %%----------------------------------------------------------------------------------------------------------------------
 
+-callback init(Args) -> {ok, State} | {ok, State, timeout()} | {ok, State, hibernate} | ignore | {error, Reason} when
+      Args   :: term(),
+      State  :: term(),
+      Reason :: term().
+
 -callback sync([{ChildId :: term(), Child :: pid()}], OldState :: term()) -> Ret when
       Ret :: {ok, State :: term()} | {stop, Reason :: term()}.
+
+-callback handle_call(Request :: term(), {pid(), Tag :: reference()}, State :: term()) -> Ret when
+      Ret      :: {reply, Reply, NewState}
+                | {reply, Reply, NewState, timeout()}
+                | {reply, Reply, NewState, hibernate}
+                | {noreply, NewState}
+                | {noreply, NewState, timeout()}
+                | {noreply, NewState, hibernate}
+                | {stop, Reason, Reply, NewState}
+                | {stop, Reason, NewState},
+      Reply    :: term(),
+      NewState :: term(),
+      Reason   :: term().
+
+-callback handle_cast(Request :: term(), State :: term()) -> Ret when
+      Ret      :: {noreply, NewState}
+                | {noreply, NewState, timeout()}
+                | {noreply, NewState, hibernate}
+                | {stop, Reason, NewState},
+      NewState :: term(),
+      Reason   :: term().
+
+-callback handle_info(Info :: timeout | term(), State :: term()) -> Ret when
+      Ret      :: {noreply, NewState}
+                | {noreply, NewState, timeout()}
+                | {noreply, NewState, hibernate}
+                | {stop, Reason, NewState},
+      NewState :: term(),
+      Reason   :: term().
+
+-callback terminate(Reason :: term(), State :: term()) -> term().
+
+-callback code_change(OldVsn, State :: term(), Extra :: term()) -> {ok, NewState} | {error, Reason :: term()} when
+      OldVsn   :: Vsn | {down, Vsn},
+      Vsn      :: term(),
+      NewState :: term().
+
+-ifdef(optional_callback).
+-optional_callbacks([format_status/2]).
+-callback format_status(Opt, [PDict, State :: term()]) -> Status :: term() when
+      Opt   :: normal | terminate,
+      PDict :: [{Key :: term(), Value :: term()}].
+-endif.
 
 %%----------------------------------------------------------------------------------------------------------------------
 %% Exported Functions

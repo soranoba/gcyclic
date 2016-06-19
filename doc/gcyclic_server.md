@@ -11,7 +11,7 @@ Copyright (c) 2016 Hinagiku Soranoba All Rights Reserved.
 
 __Behaviours:__ [`gen_server`](gen_server.md).
 
-__This module defines the `gcyclic_server` behaviour.__<br /> Required callback functions: `sync/2`.
+__This module defines the `gcyclic_server` behaviour.__<br /> Required callback functions: `init/1`, `sync/2`, `handle_call/3`, `handle_cast/2`, `handle_info/2`, `terminate/2`, `code_change/3`.
 
 <a name="index"></a>
 

@@ -31,10 +31,15 @@
 %%----------------------------------------------------------------------------------------------------------------------
 
 -type strategy()  :: one_for_all.
+
+-ifdef(namespaced_types).
 -type sup_flags() :: #{strategy  => strategy(),
                        intensity => non_neg_integer(),
                        period    => pos_integer()}
                    | {strategy(), Intensity :: non_neg_integer(), Period :: pos_integer()}.
+-else.
+-type sup_flags() :: {strategy(), Intensity :: non_neg_integer(), Period :: pos_integer()}.
+-endif.
 
 %%----------------------------------------------------------------------------------------------------------------------
 %% Callback Functions
@@ -70,9 +75,7 @@ start_link(SupName, CallbackModule, Args) ->
 init({CallbackModule, Args}) ->
     Ret = CallbackModule:init(Args),
     Strategy = case Ret of
-                   {ok, {{Strategy0, _, _}, _}}        -> Strategy0;
-                   {ok, {#{strategy := Strategy0}, _}} -> Strategy0;
-                   {ok, _} -> one_for_one;
+                   {ok, {SupFlags, _}} -> supflags_to_strategy(SupFlags);
                    _       -> undefined
                end,
     _ = put(?Strategy, Strategy),
@@ -80,3 +83,16 @@ init({CallbackModule, Args}) ->
         true  -> Ret;
         false -> error({not_supported_strategy, Strategy}, [{CallbackModule, Args}])
     end.
+
+%%----------------------------------------------------------------------------------------------------------------------
+%% Internal Functions
+%%----------------------------------------------------------------------------------------------------------------------
+
+-spec supflags_to_strategy(sup_flags()) -> strategy().
+-ifdef(namespaced_types).
+supflags_to_strategy({Strategy, _, _})        -> Strategy;
+supflags_to_strategy(#{strategy := Strategy}) -> Strategy;
+supflags_to_strategy(Map) when is_map(Map)    -> one_for_one.
+-else.
+supflags_to_strategy({Strategy, _, _})        -> Strategy.
+-endif.

@@ -39,7 +39,7 @@ strategy() = one_for_all
 
 
 <pre><code>
-sup_flags() = #{strategy =&gt; <a href="#type-strategy">strategy()</a>, intensity =&gt; non_neg_integer(), period =&gt; pos_integer()} | {<a href="#type-strategy">strategy()</a>, Intensity::non_neg_integer(), Period::pos_integer()}
+sup_flags() = {<a href="#type-strategy">strategy()</a>, Intensity::non_neg_integer(), Period::pos_integer()}
 </code></pre>
 
 <a name="index"></a>

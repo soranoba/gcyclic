@@ -1,6 +1,6 @@
 gcyclic
 =======
-[![Build Status](https://travis-ci.org/soranoba/erlup.svg?branch=master)](https://travis-ci.org/soranoba/gcyclic)
+[![Build Status](https://travis-ci.org/soranoba/gcyclic.svg?branch=master)](https://travis-ci.org/soranoba/gcyclic)
 
 Generate cyclic message passing server.
 

@@ -75,9 +75,10 @@
 
 -ifdef(optional_callback).
 -optional_callbacks([format_status/2]).
--callback format_status(Opt, [PDict, State :: term()]) -> Status :: term() when
+-callback format_status(Opt, [PDict | State]) -> Status :: term() when
       Opt   :: normal | terminate,
-      PDict :: [{Key :: term(), Value :: term()}].
+      PDict :: [{Key :: term(), Value :: term()}],
+      State :: term().
 -endif.
 
 %%----------------------------------------------------------------------------------------------------------------------

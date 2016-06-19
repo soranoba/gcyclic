@@ -73,8 +73,9 @@ handle_call(Msg, From, State) ->
 handle_cast(?Msg({sync, SpawnedBy}), State) ->
     case gcyclic_lib:strategy(SpawnedBy) of
         one_for_all ->
-            Groups = lists:map(fun({Id, Child, _, _}) when is_pid(Child) -> {Id, Child} end,
-                               supervisor:which_children(SpawnedBy)),
+            Groups = lists:filtermap(fun({_, Child, _, _})  when Child =:= self() -> false;
+                                        ({Id, Child, _, _}) when is_pid(Child)    -> {true, {Id, Child}}
+                                     end, supervisor:which_children(SpawnedBy)),
             case (get(?Callback)):sync(Groups, State) of
                 {ok, State1}   -> {noreply, State1};
                 {stop, Reason} -> {stop, Reason, State}

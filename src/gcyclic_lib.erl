@@ -21,9 +21,13 @@
 %% @doc Return the {@link gcyclic_supervisor:strategy/0} of the `gcyclic_supervisor'.
 -spec strategy(pid()) -> gcyclic_supervisor:strategy() | undefined.
 strategy(Pid) when node() =:= node(Pid) ->
-    proplists:get_value(?Strategy, process_info(Pid, dictionary));
+    case process_info(Pid, dictionary) of
+        undefined  -> undefined;
+        {_, Dicts} -> proplists:get_value(?Strategy, Dicts)
+    end;
 strategy(Pid) ->
     case rpc:call(node(Pid), erlang, process_info, [Pid, dictionary]) of
         {badrpc, Reason} -> exit(Reason, [Pid]);
-        Ret              -> proplists:get_value(?Strategy, Ret)
+        undefined        -> undefined;
+        {_, Dicts}       -> proplists:get_value(?Strategy, Dicts)
     end.

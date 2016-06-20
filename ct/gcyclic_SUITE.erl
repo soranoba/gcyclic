@@ -47,7 +47,7 @@ end_per_testcase(_Case, Config) ->
 start(_Config) ->
     {ok, SupPid} = gcyclic_supervisor:start_link(?Sup, []),
     SrvPids = [Pid || {_, Pid, _, _} <- supervisor:which_children(SupPid)],
-    ok = lists:foreach(fun check_state/1, SrvPids),
+    ok = lists:foreach(fun(X) -> check_state(X) end, SrvPids),
     ensure_exited(SupPid).
 
 restart(_Config) ->
@@ -57,7 +57,7 @@ restart(_Config) ->
                                exit(lists:nth(N, SrvPids0), restart),
                                ct:sleep(100),
                                SrvPids1 = [Pid || {_, Pid, _, _} <- supervisor:which_children(SupPid)],
-                               ok = lists:foreach(fun check_state/1, SrvPids1)
+                               ok = lists:foreach(fun(X) -> check_state(X) end, SrvPids1)
                        end, [1,2,3]),
     ensure_exited(SupPid).
 
